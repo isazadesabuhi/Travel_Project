@@ -1,0 +1,28 @@
+{% extends "general.html" %} {% block content %}
+
+{% if trips %}
+<ul>
+  {% for trip in trips %}
+  <fieldset>
+    <ul>
+      <li><strong>place:</strong>{{trip.place}}</li>
+      <li><strong>price:</strong>{{trip.price}}$</li>
+      <li><strong>starting time:</strong> {{trip.starting_time}}</li>
+      <li><strong>duration:</strong>{{trip.duration}} days</li>
+      <li><strong>description:</strong>{{trip.description}}</li>
+      {% comment %}
+      <li>
+        <img
+          src="https://media.istockphoto.com/id/1450047072/fr/photo/femme-assise-sur-le-fond-du-lago-di-braies-en-hiver.webp?s=2048x2048&w=is&k=20&c=IGzgUpG46oORbQA5jiF6UNc9zaLD4HLGn1a_9Svl9_w="
+          alt="travel img"
+        />
+      </li>
+      {% endcomment %}
+    </ul>
+  </fieldset>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No trips available.</p>
+{% endif %}
+{% endblock %}

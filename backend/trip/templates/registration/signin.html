@@ -1,0 +1,83 @@
+{% comment %} {% extends "general.html" %} {% block content %} {% endcomment %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <style>
+      /* Simple styling for clarity; feel free to customize */
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        padding-top: 50px;
+      }
+      form {
+        border: 1px solid #ccc;
+        padding: 20px;
+        box-shadow: 0 0 10px #ccc;
+      }
+      input[type="text"],
+      input[type="password"] {
+        width: calc(100% - 22px);
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+      input[type="submit"] {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+      }
+      input[type="submit"]:hover {
+        background-color: #0056b3;
+      }
+      .error {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Login</h1>
+    <form method="POST">
+      {% csrf_token %} {{ form.as_p }}
+      <button type="submit">Login</button>
+      <a href="{% url 'user_signup' %}">Dont have Account Create</a>
+    </form>
+
+    {% comment %}
+    <form method="post" action="{% url 'user_login' %}">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="username">Username:</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          placeholder="Enter your username"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Enter your password"
+          required
+        />
+      </div>
+      {% if error %}
+      <p class="error">{{ error }}</p>
+      {% endif %}
+      <button type="submit">Log In</button>
+    </form>
+    {% endcomment %}
+  </body>
+</html>
+
+{% comment %} {% endblock %} {% endcomment %}

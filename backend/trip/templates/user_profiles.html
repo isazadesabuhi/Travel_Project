@@ -1,0 +1,21 @@
+{% extends "general.html" %} {% block content %}
+
+<ul>
+  {% for profile in profiles %}
+  <fieldset>
+    <ul>
+      <li><strong>Bio:</strong>{{profile.bio}}</li>
+      <li><strong>Location:</strong>{{profile.location}}</li>
+      <li><strong>Birth Date:</strong>{{profile.birth_date}}</li>
+      <li><strong>First Name:</strong>{{profile.firstname}}</li>
+      <li><strong>Last Name:</strong>{{profile.lastname}}</li>
+      <li><strong>Email:</strong>{{profile.user.email}}</li>
+      <li><strong>username:</strong>{{profile.user.username}}</li>
+      <a href="/{{profile.user.username}}/mytrips">
+        <strong>Organized trips:</strong><a>
+    </ul>
+  </fieldset>
+  {% endfor %}
+</ul>
+
+{% endblock %}

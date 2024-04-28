@@ -1,0 +1,15 @@
+{% extends "general.html" %} {% block content %}
+
+<h1>{{ user_profile.user.username }}'s Profile</h1>
+
+<ul>
+  <li><p>Username: {{ user_profile.user.username }}</p></li>
+  <li><p>First name: {{ user_profile.firstname }}</p></li>
+  <li><p>Last name: {{ user_profile.lastname }}</p></li>
+  <li><p>Email: {{ user_profile.user.email }}</p></li>
+  <li><p>Bio: {{ user_profile.bio }}</p></li>
+  <li><p>Location: {{ user_profile.location }}</p></li>
+  <li><p>Birth Date: {{ user_profile.birth_date|date:"F d, Y" }}</p></li>
+</ul>
+
+{% endblock %}

@@ -1,0 +1,16 @@
+{% comment %} {% extends "general.html" %} {% block content %} {% endcomment %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Add New Trip</title>
+  </head>
+  <body>
+    <h2>Add New Trip</h2>
+    <form method="post">
+      {% csrf_token %} {{ form.as_p }}
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html>
+{% comment %} {% endblock %} {% endcomment %}

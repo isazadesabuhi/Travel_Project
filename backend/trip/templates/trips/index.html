@@ -1,0 +1,21 @@
+{% extends "general.html" %} {% block content %} {% load slug_maker %} 
+{% if trips %}
+<ul>
+  {% for trip in trips %}
+  <fieldset>
+    <li><a href="/trips/{{ trip.slug }}/">{{ trip.title }}</a></li>
+
+    <ul>
+      <li><strong>place:</strong>{{trip.place}}</li>
+      <li><strong>price:</strong>{{trip.price}}$</li>
+      <li><strong>starting time:</strong> {{trip.starting_time}}</li>
+
+      <li><strong>duration:</strong> {{trip.duration}} days</li>
+      <li><strong>organized by:</strong> {{trip.user}}</li>
+    </ul>
+  </fieldset>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No trips available.</p>
+{% endif %} {% endblock %}
