@@ -41,7 +41,7 @@ class UserProfile(models.Model):
     
     
     def __str__(self):
-        return self.user.username
+        return self.user.user_name
 
 # Automatically create a UserProfile when a User is created
 @receiver(post_save, sender=User)

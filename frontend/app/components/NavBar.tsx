@@ -1,7 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
+import axios from "axios";
+
 function Navbar() {
   const [isAuth, setIsAuth] = useState(false);
   useEffect(() => {
@@ -9,6 +12,19 @@ function Navbar() {
       setIsAuth(true);
     }
   }, [isAuth]);
+
+  const router = useRouter();
+
+  const [btnClicked, setbtnClicked] = useState(false);
+
+  function handleClick() {
+    console.log("btn is clicked");
+    setbtnClicked(true);
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    router.push("/");
+  }
+  console.log(localStorage);
 
   return (
     <nav className="flex flex-row justify-between">
@@ -25,10 +41,13 @@ function Navbar() {
             </li>
             <li>
               {isAuth ? (
-                <Link href="/logout">Logout</Link>
+                <button onClick={handleClick}>Logout</button>
               ) : (
                 <Link href="/login">Login</Link>
               )}
+            </li>
+            <li>
+              <Link href="/register">Register</Link>
             </li>
             <li>
               <details>

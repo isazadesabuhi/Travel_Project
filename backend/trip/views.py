@@ -145,4 +145,3 @@ def trip_edit(request,slug):
         form = TripForm(instance=trip)
     
     return render(request, 'trips/trip_edit.html', {'form': form})
-    

@@ -6,7 +6,7 @@
 
   <body>
     <div id="sidebar">
-      {% block sidebar %}
+      {% block sidebar %} {% comment %}
       <ul>
         <li><a href="/">Home</a></li>
         {% if request.user.is_authenticated %}
@@ -26,7 +26,7 @@
         </li>
         {% endif %}
       </ul>
-      {% endblock %}
+      {% endcomment %} {% endblock %}
     </div>
 
     <div id="content">{% block content %}{% endblock %}</div>

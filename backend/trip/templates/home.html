@@ -1,6 +1,6 @@
 {% extends "general.html" %} {% block content %} 
 
-{% if request.user.is_authenticated %}
+{% comment %} {% if request.user.is_authenticated %}
 <ul>
   <li>{{ request.user.username }} is logged in</li>
   <li><a href="{{request.user.username}}/mytrips">Trips organized by me</a></li>
@@ -10,7 +10,7 @@
 
   {% else %}
   Nothing
- {% endif %}
+ {% endif %} {% endcomment %}
 
   <a href="/trips/">All trips</a>
   {% endblock %}
