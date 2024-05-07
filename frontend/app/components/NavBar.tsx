@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import axios from "axios";
 
 function Navbar() {
   const [isAuth, setIsAuth] = useState(false);
@@ -24,7 +23,6 @@ function Navbar() {
     localStorage.removeItem("refresh_token");
     router.push("/");
   }
-  console.log(localStorage);
 
   return (
     <nav className="flex flex-row justify-between">
@@ -38,6 +36,9 @@ function Navbar() {
           <ul className="menu menu-horizontal px-1">
             <li>
               <Link href="/trips">Trips</Link>
+            </li>
+            <li>
+              <Link href="/search">Search Trips</Link>
             </li>
             <li>
               {isAuth ? (

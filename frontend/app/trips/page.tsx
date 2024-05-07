@@ -1,26 +1,29 @@
-async function getData() {
-  const res = await fetch("http://127.0.0.1:8000/api");
-  // The return value is *not* serialized
-  // You can return Date, Map, Set, etc.
+"use client";
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
-  if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
-    throw new Error("Failed to fetch data");
-  }
+function Trips(){
+  const router = useRouter();
 
-  return res.json();
-}
+  const [trips,setTrips] = useState(null)
 
-export default async function Trips() {
-  const data = await getData();
-  console.log(data);
+  useEffect(() => {
+    axios.get("http://localhost:8000/api/trips").then((response) => {
+      setTrips(response.data)
+    }).catch((error) =>{
+      console.log(error)
+    })
+  },[])
 
-  return (
+
+  return(
     <main>
       <div className="container mx-auto py-8">
         <h1 className="text-2xl text-center font-bold mb-4">All Trips</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {data.map((item, index) => {
+          {trips?.map((item, index) => {
             return (
               <div key={index} className="bg-white p-6 rounded-lg shadow-md">
                 <h2 className="text-xl font-semibold mb-2 text-black">
@@ -38,14 +41,17 @@ export default async function Trips() {
                 <p className="text-gray-600 mb-4">
                   Duration: {item.duration} days
                 </p>
-                <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
-                  Add to Cart
-                </button>
+                <Link href={`trips/${item.slug}`} className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
+                  Go to Trip
+                </Link>
               </div>
             );
           })}
         </div>
       </div>
     </main>
-  );
+  
+  )
 }
+
+export default Trips

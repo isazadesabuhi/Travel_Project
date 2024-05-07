@@ -3,10 +3,10 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render,redirect
 
-from .models import Trip,UserProfile
+from .models import Trip
 
 from django.contrib.auth import authenticate,login,logout
-from .forms import SignupForm, TripForm,LoginForm,UserProfileForm
+from .forms import SignupForm, TripForm,LoginForm
 from django.contrib.auth.models import User
 
 
@@ -111,24 +111,24 @@ def add_trip(request):
 #     return render(request, 'user_profile_detail.html', {'user_profile': user_profile})
 
 # 
-def user_profiles(request):
-    profiles = UserProfile.objects.all()
-    return render(request,'user_profiles.html',{"profiles":profiles})
+# def user_profiles(request):
+#     profiles = UserProfile.objects.all()
+#     return render(request,'user_profiles.html',{"profiles":profiles})
 # 
-@login_required
-def edit_user_profile(request,username):
-    # Attempt to fetch the user's profile, or create one if it doesn't exist
-    profile, created = UserProfile.objects.get_or_create(user=request.user)
+# @login_required
+# def edit_user_profile(request,username):
+#     # Attempt to fetch the user's profile, or create one if it doesn't exist
+#     profile, created = UserProfile.objects.get_or_create(user=request.user)
     
-    if request.method == 'POST':
-        form = UserProfileForm(request.POST, instance=profile)
-        if form.is_valid():
-            form.save()
-            return redirect('user_profile_detail', username=request.user.username)  # Adjust the redirect as needed
-    else:
-        form = UserProfileForm(instance=profile)
+#     if request.method == 'POST':
+#         form = UserProfileForm(request.POST, instance=profile)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('user_profile_detail', username=request.user.username)  # Adjust the redirect as needed
+#     else:
+#         form = UserProfileForm(instance=profile)
     
-    return render(request, 'user_profile_edit.html', {'form': form})
+#     return render(request, 'user_profile_edit.html', {'form': form})
 
 
 @login_required

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Trip,UserProfile
+from .models import Trip
 # Register your models here.
 admin.site.register(Trip)
-admin.site.register(UserProfile)
+# admin.site.register(UserProfile)

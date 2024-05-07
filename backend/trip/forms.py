@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
-from .models import Trip,UserProfile
+from .models import Trip
 
 class SignupForm(UserCreationForm):
     class Meta:
@@ -18,10 +18,10 @@ class LoginForm(forms.Form):
         # Optional: Add extra steps to validate the email, if needed
         return cleaned_data
         
-class UserProfileForm(forms.ModelForm):
-    class Meta:
-        model = UserProfile
-        fields = ['firstname', 'lastname', 'bio', 'location', 'birth_date']
+# class UserProfileForm(forms.ModelForm):
+#     class Meta:
+#         model = UserProfile
+#         fields = ['firstname', 'lastname', 'bio', 'location', 'birth_date']
 
     
 class TripForm(forms.ModelForm):
@@ -29,4 +29,4 @@ class TripForm(forms.ModelForm):
     
     class Meta:
         model = Trip
-        fields = ['title', 'place', 'price', 'starting_time', 'description', 'duration', 'slug']
+        fields = ['title', 'place', 'price', 'starting_time', 'description', 'duration']
