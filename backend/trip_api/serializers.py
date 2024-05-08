@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from trip.models import Trip
-from users.models import NewUser
+from users.models import User
 from django.conf import settings 
 class TripSerializer(serializers.ModelSerializer):
     # author = serializers.CharField(source='author.username', read_only=True)

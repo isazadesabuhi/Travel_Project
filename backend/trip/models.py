@@ -47,8 +47,8 @@ class Trip(models.Model):
     description = models.CharField(max_length=3000)
     duration = models.IntegerField(validators=[MinValueValidator(1)], help_text="Duration in days")
     slug = AutoSlugField(populate_from='title', unique_with=['starting_time'])
-    objects = models.Manager()  # default manager
-    postobjects = PostObjects()  # custom manager
+    # objects = models.Manager()  # default manager
+    # postobjects = PostObjects()  # custom manager
     
     def __str__(self):
         return self.title

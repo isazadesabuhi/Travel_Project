@@ -43,6 +43,6 @@ class TripListDetailfilter(generics.ListAPIView):
 
 
 class CreateTrip(generics.CreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
     queryset = Trip.objects.all()
     serializer_class = TripSerializer

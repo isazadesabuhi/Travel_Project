@@ -26,13 +26,15 @@ function Login() {
   useEffect(() => {
     if (btnClicked) {
       axios
-        .post("http://localhost:8000/api/token/", data, {
-          // headers: {
-          //   "Accept-Language": "az",
-          // },
+        .post("http://localhost:8000/api/user/login/", data, {
+          headers: {
+            // Add your headers here
+            "Content-Type": "application/json", // Example header
+          },
+          withCredentials: true, // Add this line to send credentials
         })
         .then((response) => {
-          setLoggedIn(response);
+          setLoggedIn(response.data); // Update the type of the `loggedIn` state variable
           localStorage.setItem("access_token", response.data.access);
           localStorage.setItem("refresh_token", response.data.refresh);
           router.push("/");
@@ -45,7 +47,7 @@ function Login() {
           console.error(error);
         });
     }
-  }, [data, btnClicked]);
+  }, [data, btnClicked, router]);
   console.log(loggedIn);
   return (
     <div>
