@@ -14,7 +14,7 @@ class PostUserWritePermission(BasePermission):
             if request.method in SAFE_METHODS:
                 return True
             return obj.user == request.user
-
+    
 
 class TripList(generics.ListAPIView):
     # permission_classes = [IsAuthenticated]
@@ -46,3 +46,6 @@ class CreateTrip(generics.CreateAPIView):
     # permission_classes = [permissions.IsAuthenticated]
     queryset = Trip.objects.all()
     serializer_class = TripSerializer
+    
+    # def perform_create(self, serializer):
+    #     serializer.save(user=self.request.user)

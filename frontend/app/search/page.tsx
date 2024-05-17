@@ -16,7 +16,7 @@ function Search() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8000//api/search/trips/?search=${query}`)
+      .get(`http://localhost:8000/api/search/trips/?search=${query}`)
       .then((response) => {
         setTrips(response.data);
       })

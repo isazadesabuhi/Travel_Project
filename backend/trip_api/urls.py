@@ -9,5 +9,5 @@ urlpatterns = [
     path('mytrips/<str:username>/', UserTripList.as_view(), name='detailtripuser'),
     path('search/trips/', TripListDetailfilter.as_view(), name='triplistdetailfilter'),
     #
-    path('admin/create/', CreateTrip.as_view(), name='createtrip'),
+    path('create/trip/', CreateTrip.as_view(), name='createtrip'),
 ]

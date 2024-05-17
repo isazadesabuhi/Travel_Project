@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 function Navbar() {
   const [isAuth, setIsAuth] = useState(false);
@@ -15,38 +16,42 @@ function Navbar() {
 
   const router = useRouter();
 
-  const [btnClicked, setbtnClicked] = useState(false);
-
-  function handleClick() {
-    console.log("btn is clicked");
-    setbtnClicked(true);
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
-    router.push("/");
-  }
-
-  const [loggedIn, setLoggedIn] = useState(null);
+  const [userInfo, setuserInfo] = useState(null);
 
   useEffect(() => {
     axios
       .get("http://localhost:8000/api/user/profile/", {
-        headers: {
-          // Add your headers here
-          Authorization: "Bearer YOUR_ACCESS_TOKEN",
-          "Content-Type": "application/json", // Example header
-        },
         withCredentials: true, // Add this line to send credentials
       })
       .then((response) => {
-        setLoggedIn(response.data);
-        console.log(response);
+        setuserInfo(response.data);
       })
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  }, [router.pathname]);
 
-  console.log(loggedIn);
+  const logout = () => {
+    axios
+      .post(
+        "http://localhost:8000/api/user/logout/",
+        {},
+        {
+          withCredentials: true, // Ensure credentials are sent with the request
+        }
+      )
+      .then((response) => {
+        if (response.data.message === "success") {
+          Cookies.remove("jwt"); // Remove the JWT cookie
+          setuserInfo(null);
+          setIsAuth(false);
+          router.push("/login"); // Redirect the user to the login page
+        }
+      })
+      .catch((error) => {
+        console.error("Logout error:", error);
+      });
+  };
 
   return (
     <nav className="flex flex-row justify-between">
@@ -64,32 +69,22 @@ function Navbar() {
             <li>
               <Link href="/search">Search Trips</Link>
             </li>
-            <li>
-              <Link href="/search">{loggedIn?.first_name}</Link>
-            </li>
-            <li>
-              {isAuth ? (
-                <button onClick={handleClick}>Logout</button>
-              ) : (
+            {userInfo ? (
+              <li>
+                <Link href="/profile">{userInfo?.first_name}</Link>
+              </li>
+            ) : (
+              ""
+            )}
+            {userInfo ? (
+              <li>
+                <button onClick={logout}>Logout</button>
+              </li>
+            ) : (
+              <li>
                 <Link href="/login">Login</Link>
-              )}
-            </li>
-            <li>
-              <Link href="/register">Register</Link>
-            </li>
-            <li>
-              <details>
-                <summary>Parent</summary>
-                <ul className="p-2 bg-base-100 rounded-t-none">
-                  <li>
-                    <Link href="">Link 1</Link>
-                  </li>
-                  <li>
-                    <Link href="">Link 2</Link>
-                  </li>
-                </ul>
-              </details>
-            </li>
+              </li>
+            )}
           </ul>
         </div>
       </div>

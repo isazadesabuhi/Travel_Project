@@ -17,7 +17,7 @@ function Trips(){
     })
   },[])
 
-
+console.log(trips)
   return(
     <main>
       <div className="container mx-auto py-8">
@@ -40,6 +40,9 @@ function Trips(){
                 {/* <p className="text-gray-600 mb-4">Description: {item.user}</p> */}
                 <p className="text-gray-600 mb-4">
                   Duration: {item.duration} days
+                </p>
+                <p className="text-gray-600 mb-4">
+                  created by <b>{item.user.username}</b>
                 </p>
                 <Link href={`trips/${item.slug}`} className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
                   Go to Trip

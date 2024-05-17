@@ -1,104 +1,76 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 import axios from "axios";
 
-function Register() {
-  const [loggedIn, setLoggedIn] = useState(null);
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
+function TripCreate() {
+  const { register, handleSubmit } = useForm();
 
-  const [email, setEmail] = useState("");
-
-  const [password, setPassword] = useState("");
-  const [btnClicked, setbtnClicked] = useState(false);
+  const formObject = [
+    {
+      input: "username",
+      placeholder: "Username",
+      type: "text",
+    },
+    {
+      input: "first_name",
+      placeholder: "First name",
+      type: "text",
+    },
+    {
+      input: "last_name",
+      placeholder: "Last name",
+      type: "text",
+    },
+    {
+      input: "email",
+      placeholder: "Email",
+      type: "email",
+    },
+    {
+      input: "password",
+      placeholder: "Password",
+      type: "password",
+    },
+  ];
 
   const router = useRouter();
 
-  const data = {
-    first_name:firstname,
-    last_name:lastname,
-    email:email,
-    password:password
-  };
-
-  function handleClick() {
-    console.log("btn is clicked");
-    setbtnClicked(true);
-  }
-
-  useEffect(() => {
-    if (btnClicked) {
-      axios
-        .post("http://localhost:8000/api/user/register/", data, {})
-        .then((response) => {
-          setLoggedIn(response);
-          if (response.statusText == "Created") {
-            router.push("/login");
-          }
-          console.log(response);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
-  }, [data, btnClicked]);
-console.log(data)
   return (
-    <div>
-      <label class="input input-bordered flex items-center gap-2">
-        
-        <input
-          name="email"
-          type="email"
-          value={email}
-          class="grow"
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-          required
-        />
-      </label>
-      <label class="input input-bordered flex items-center gap-2">
-        
-        <input
-          name="first_name"
-          type="text"
-          value={firstname}
-          class="grow"
-          onChange={(e) => setFirstname(e.target.value)}
-          placeholder="First name"
-          required
-        />
-      </label>
+    <div className="px-[300px]">
+      <h1 className="text-center text-[50px]">Register</h1>
+      <form
+        className="flex flex-col"
+        onSubmit={handleSubmit(async (data) => {
+          try {
+            await axios.post("http://localhost:8000/api/user/register/", data);
+            router.push("/login");
+          } catch (error) {
+            console.log(error);
+          }
+        })}
+      >
+        {formObject.map((item, index) => {
+          return (
+            <label
+              key={index}
+              className="input input-bordered flex items-center gap-2 mb-[10px]"
+            >
+              <input
+                {...register(item.input)}
+                placeholder={item.placeholder}
+                type={item.type}
+              />
+            </label>
+          );
+        })}
 
-      <label class="input input-bordered flex items-center gap-2">
-        
-        <input
-          name="last_name"
-          type="text"
-          value={lastname}
-          class="grow"
-          onChange={(e) => setLastname(e.target.value)}
-          placeholder="First name"
-          required
-        />
-      </label>
-      <label class="input input-bordered flex items-center gap-2">
-        
-        <input
-          name="password"
-          type="password"
-          value={password}
-          class="grow"
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          required
-        />
-      </label>
-      <button onClick={handleClick} class="btn">
-        Log in{" "}
-      </button>
+        <input type="submit" />
+      </form>
     </div>
   );
 }
-export default Register;
+
+export default TripCreate;
