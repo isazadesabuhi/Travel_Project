@@ -5,42 +5,54 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 
 function Profile() {
-  const router = useRouter();
-
-  const [loggedIn, setLoggedIn] = useState(null);
+  const [userData, setUserData] = useState(null);
+  const [token, setToken] = useState(null);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/api/user/profile/", {
-        headers: {
-          // Add your headers here
-          Authorization: "Bearer YOUR_ACCESS_TOKEN",
-          "Content-Type": "application/json", // Example header
-        },
-        withCredentials: true, // Add this line to send credentials
-      })
-      .then((response) => {
-        setLoggedIn(response.data);
-        console.log(response);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    const accessToken = localStorage.getItem("access");
+    if (accessToken) {
+      setToken(accessToken);
+    }
   }, []);
 
+  useEffect(() => {
+    if (token) {
+      const fetchUserData = async () => {
+        try {
+          const response = await axios.get(
+            "http://localhost:8000/api/user/profile/",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          setUserData(response.data);
+        } catch (error) {
+          console.error(
+            "Error fetching user data:",
+            error.response ? error.response.data : error.message
+          );
+        }
+      };
+
+      fetchUserData();
+    }
+  }, [token]);
+  console.log(userData);
   return (
     <main>
       <div className="container mx-auto py-8">
         <h1 className="text-2xl text-center font-bold mb-4">
-          {loggedIn?.first_name}'s profile
+          {userData?.first_name}'s profile
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <div className="flex flex-col">
-            name:{loggedIn?.first_name}
-            <div>name:{loggedIn?.first_name}</div>
-            <div>last name:{loggedIn?.last_name}</div>
-            <div>email: {loggedIn?.email}</div>
-            <div>id: {loggedIn?.id}</div>
+            name:{userData?.first_name}
+            <div>name:{userData?.first_name}</div>
+            <div>last name:{userData?.last_name}</div>
+            <div>email: {userData?.email}</div>
+            <div>id: {userData?.id}</div>
           </div>
         </div>
       </div>

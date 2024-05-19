@@ -42,10 +42,20 @@ class TripListDetailfilter(generics.ListAPIView):
     search_fields = ['title', 'description']
 
 
+# class CreateTrip(generics.CreateAPIView):
+#     queryset = Trip.objects.all()
+#     serializer_class = TripSerializer
+#     permission_classes = [permissions.IsAuthenticated]  # Ensure that the user is authenticated
+
+#     def perform_create(self, serializer):
+#         serializer.save(user=self.request.user)
+
+
 class CreateTrip(generics.CreateAPIView):
-    # permission_classes = [permissions.IsAuthenticated]
+
     queryset = Trip.objects.all()
     serializer_class = TripSerializer
-    
-    # def perform_create(self, serializer):
-    #     serializer.save(user=self.request.user)
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)  # Set the user to the logged-in user

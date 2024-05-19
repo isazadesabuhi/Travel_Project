@@ -33,9 +33,6 @@ from autoslug import AutoSlugField
     
     
 class Trip(models.Model):
-    class PostObjects(models.Manager):
-        def get_queryset(self):
-            return super().get_queryset()
             
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='users')
@@ -47,8 +44,6 @@ class Trip(models.Model):
     description = models.CharField(max_length=3000)
     duration = models.IntegerField(validators=[MinValueValidator(1)], help_text="Duration in days")
     slug = AutoSlugField(populate_from='title', unique_with=['starting_time'])
-    # objects = models.Manager()  # default manager
-    # postobjects = PostObjects()  # custom manager
     
     def __str__(self):
         return self.title

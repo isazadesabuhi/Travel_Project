@@ -7,29 +7,42 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 function Navbar() {
-  const [isAuth, setIsAuth] = useState(false);
-  useEffect(() => {
-    if (localStorage.getItem("access_token") !== null) {
-      setIsAuth(true);
-    }
-  }, [isAuth]);
-
+  const [userData, setUserData] = useState(null);
+  const [token, setToken] = useState(null);
   const router = useRouter();
 
-  const [userInfo, setuserInfo] = useState(null);
+  useEffect(() => {
+    const accessToken = localStorage.getItem("access");
+    if (accessToken) {
+      setToken(accessToken);
+    }
+  }, []);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/api/user/profile/", {
-        withCredentials: true, // Add this line to send credentials
-      })
-      .then((response) => {
-        setuserInfo(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [router.pathname]);
+    if (token) {
+      const fetchUserData = async () => {
+        try {
+          const response = await axios.get(
+            "http://localhost:8000/api/user/profile/",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          setUserData(response.data);
+        } catch (error) {
+          console.error(
+            "Error fetching user data:",
+            error.response ? error.response.data : error.message
+          );
+        }
+      };
+
+      fetchUserData();
+    }
+  }, [token]);
+  console.log(userData);
 
   const logout = () => {
     axios
@@ -51,6 +64,8 @@ function Navbar() {
       .catch((error) => {
         console.error("Logout error:", error);
       });
+    localStorage.removeItem("access");
+    router.push("/login");
   };
 
   return (
@@ -69,14 +84,14 @@ function Navbar() {
             <li>
               <Link href="/search">Search Trips</Link>
             </li>
-            {userInfo ? (
+            {userData ? (
               <li>
-                <Link href="/profile">{userInfo?.first_name}</Link>
+                <Link href="/profile">{userData?.first_name}</Link>
               </li>
             ) : (
               ""
             )}
-            {userInfo ? (
+            {userData ? (
               <li>
                 <button onClick={logout}>Logout</button>
               </li>
