@@ -1,13 +1,12 @@
 from django.contrib.auth.decorators import login_required
 
 from django.http import Http404
-from django.shortcuts import get_object_or_404, render,redirect
+from django.shortcuts import render,redirect
 
 from .models import Trip
 
 from django.contrib.auth import authenticate,login,logout
 from .forms import SignupForm, TripForm,LoginForm
-from django.contrib.auth.models import User
 
 
 def home(request):
@@ -55,7 +54,7 @@ def registration(request):
         return redirect('home')
     else:
         # The user is not authenticated, redirect to login page or another action
-        return redirect('signup')  # Replace 'login_url' with the name of your login route
+        return redirect('signup')  
     
     
 def user_login(request):
@@ -91,44 +90,6 @@ def add_trip(request):
     else:
         form = TripForm()
     return render(request, 'add_trip.html', {'form': form})
-
-
-# @login_required
-# def user_profile_detail(request, username):
-#     try:
-#         # First, get the User instance by username
-#         user = User.objects.get(username=username)
-#     except User.DoesNotExist:
-#         raise Http404("User does not exist")
-
-#     try:
-#         # Then, get the UserProfile instance related to the User
-#         user_profile = UserProfile.objects.get(user=user)
-#     except UserProfile.DoesNotExist:
-#         raise Http404("UserProfile does not exist for this user")
-
-#     # Pass the user_profile to the template, not the user
-#     return render(request, 'user_profile_detail.html', {'user_profile': user_profile})
-
-# 
-# def user_profiles(request):
-#     profiles = UserProfile.objects.all()
-#     return render(request,'user_profiles.html',{"profiles":profiles})
-# 
-# @login_required
-# def edit_user_profile(request,username):
-#     # Attempt to fetch the user's profile, or create one if it doesn't exist
-#     profile, created = UserProfile.objects.get_or_create(user=request.user)
-    
-#     if request.method == 'POST':
-#         form = UserProfileForm(request.POST, instance=profile)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('user_profile_detail', username=request.user.username)  # Adjust the redirect as needed
-#     else:
-#         form = UserProfileForm(instance=profile)
-    
-#     return render(request, 'user_profile_edit.html', {'form': form})
 
 
 @login_required

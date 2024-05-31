@@ -67,7 +67,7 @@ function Navbar() {
     localStorage.removeItem("access");
     router.push("/login");
   };
-
+console.log(userData)
   return (
     <nav className="flex flex-row justify-between">
       <div className="navbar bg-base-100">

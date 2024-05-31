@@ -39,20 +39,31 @@ function Profile() {
       fetchUserData();
     }
   }, [token]);
-  console.log(userData);
+
   return (
     <main>
       <div className="container mx-auto py-8">
         <h1 className="text-2xl text-center font-bold mb-4">
           {userData?.first_name}'s profile
         </h1>
+        <div className="flex flex-col">
+          <Link className="text-red-400" href="/update/profile">
+            update profile
+          </Link>
+          <Link className="text-red-400" href="/update/user_password">
+            update password
+          </Link>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <div className="flex flex-col">
-            name:{userData?.first_name}
             <div>name:{userData?.first_name}</div>
             <div>last name:{userData?.last_name}</div>
             <div>email: {userData?.email}</div>
             <div>id: {userData?.id}</div>
+            <div>
+              Countries visited: {userData?.countries_visited.join(",")}
+            </div>
           </div>
         </div>
       </div>

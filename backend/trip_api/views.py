@@ -2,10 +2,8 @@ from rest_framework import viewsets, filters, generics, permissions
 from rest_framework.response import Response
 from trip.models import Trip
 from .serializers import TripSerializer
-from rest_framework.permissions import SAFE_METHODS, BasePermission,IsAuthenticated
+from rest_framework.permissions import SAFE_METHODS, BasePermission
 from django.shortcuts import get_object_or_404
-from rest_framework.views import APIView
-from django.conf import settings
 
 class PostUserWritePermission(BasePermission):
     message = 'Editing trips is restricted to the author only.'
@@ -40,15 +38,6 @@ class TripListDetailfilter(generics.ListAPIView):
     serializer_class = TripSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['title', 'description']
-
-
-# class CreateTrip(generics.CreateAPIView):
-#     queryset = Trip.objects.all()
-#     serializer_class = TripSerializer
-#     permission_classes = [permissions.IsAuthenticated]  # Ensure that the user is authenticated
-
-#     def perform_create(self, serializer):
-#         serializer.save(user=self.request.user)
 
 
 class CreateTrip(generics.CreateAPIView):

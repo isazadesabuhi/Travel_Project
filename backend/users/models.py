@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser,BaseUserManager
-
-
+from django_countries.fields import CountryField
 
 class CustomAccountManager(BaseUserManager):
 
@@ -41,6 +40,8 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=255)
     
     password = models.CharField(max_length=255)
+    
+    countries_visited = CountryField(multiple=True, blank=True)  # Optional field
     # username = None
     objects = CustomAccountManager()
 

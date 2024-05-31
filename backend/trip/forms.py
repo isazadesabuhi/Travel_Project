@@ -17,12 +17,6 @@ class LoginForm(forms.Form):
         email = cleaned_data.get("email")
         # Optional: Add extra steps to validate the email, if needed
         return cleaned_data
-        
-# class UserProfileForm(forms.ModelForm):
-#     class Meta:
-#         model = UserProfile
-#         fields = ['firstname', 'lastname', 'bio', 'location', 'birth_date']
-
     
 class TripForm(forms.ModelForm):
     duration = forms.IntegerField(validators=[MinValueValidator(1)], help_text="Duration in days")

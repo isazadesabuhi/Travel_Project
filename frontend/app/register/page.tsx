@@ -34,6 +34,11 @@ function TripCreate() {
       placeholder: "Password",
       type: "password",
     },
+    // {
+    //   input: "visited_countries",
+    //   placeholder: "visited_countries",
+    //   type: "text",
+    // },
   ];
 
   const router = useRouter();
