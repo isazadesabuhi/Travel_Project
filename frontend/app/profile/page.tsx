@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
@@ -39,7 +40,6 @@ function Profile() {
       fetchUserData();
     }
   }, [token]);
-
   return (
     <main>
       <div className="container mx-auto py-8">
@@ -54,16 +54,26 @@ function Profile() {
             update password
           </Link>
         </div>
-
+        <Image
+          className=""
+          width={100}
+          height={100}
+          src={userData?.profile_picture}
+          alt={userData?.first_name}
+        />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <div className="flex flex-col">
             <div>name:{userData?.first_name}</div>
             <div>last name:{userData?.last_name}</div>
             <div>email: {userData?.email}</div>
             <div>id: {userData?.id}</div>
-            <div>
-              Countries visited: {userData?.countries_visited.join(",")}
-            </div>
+            {/* <div>countries {userData?.countries_visited}</div> */}
+            countries that i have visited:
+            {userData?.countries_visited.map((country, index) => (
+              <div key={index} className="flex flex-col">
+                {index + 1}:{country}
+              </div>
+            ))}
           </div>
         </div>
       </div>

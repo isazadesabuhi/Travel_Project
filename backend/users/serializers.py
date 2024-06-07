@@ -7,23 +7,23 @@ class CountriesField(serializers.Field):
     def to_representation(self, value):
         if not value:
             return []
-        return [countries.name(code) for code in value]
+        return [str(code) for code in value]  # Assuming value is a list of country codes
+        # return [countries.name(code) for code in value]
 
     def to_internal_value(self, data):
         if not data:
             return []
-        return [Country(code=countries.alpha2(name)) for name in data]
-
+        return data  # Assuming data is already a list of country codes
+    
 class UserSerializer(serializers.ModelSerializer):
-    countries_visited = CountriesField(required=False)  # Use the custom field
+    countries_visited = CountriesField(required=False)
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password', 'countries_visited']  # Add 'countries_visited'
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'countries_visited', 'password']
         extra_kwargs = {
             'password': {'write_only': True, 'required': False},
-            'email': {'required': False},
-            'countries_visited': {'required': False}  # Make the field optional
+            'email': {'required': False}
         }
 
     def create(self, validated_data):
@@ -33,7 +33,7 @@ class UserSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
-    
+
     def update(self, instance, validated_data):
         for attr, value in validated_data.items():
             if attr == 'password' and value:

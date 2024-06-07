@@ -5,9 +5,9 @@ from rest_framework.exceptions import AuthenticationFailed
 from .serializers import UserSerializer, PasswordUpdateSerializer
 from .models import User
 import jwt, datetime
-from django_countries import countries
 from rest_framework.permissions import IsAuthenticated
-
+from rest_framework.decorators import api_view
+from django_countries import countries
 # Create your views here.
 class RegisterView(APIView):
     def post(self, request):
@@ -73,11 +73,6 @@ class UserDetailView(generics.RetrieveAPIView):
 
     def get_object(self):
         return self.request.user
-    
-class CountryListView(APIView):
-    def get(self, request):
-        country_list = [{'code': code, 'name': name} for code, name in countries]
-        return Response(country_list)
 
 
 class LogoutView(APIView):
@@ -108,3 +103,7 @@ class PasswordUpdateView(APIView):
             serializer.update(request.user, serializer.validated_data)
             return Response({"detail": "Password updated successfully."}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def list_countries(request):
+    return Response([{'code': name, 'name': name} for code, name in countries])

@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser,BaseUserManager
 from django_countries.fields import CountryField
-
 class CustomAccountManager(BaseUserManager):
 
     def create_superuser(self, email, password, **other_fields):
@@ -30,19 +29,16 @@ class CustomAccountManager(BaseUserManager):
         user.save()
         return user
     
-    
-
 # Create your models here.
 class User(AbstractUser):
     username = models.CharField(max_length=255,unique=True)
     email = models.CharField(max_length=255, unique=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    
+    profile_picture = models.ImageField(upload_to='profile_pics', null=True, blank=True)
     password = models.CharField(max_length=255)
     
     countries_visited = CountryField(multiple=True, blank=True)  # Optional field
-    # username = None
     objects = CustomAccountManager()
 
     

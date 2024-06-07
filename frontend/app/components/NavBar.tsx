@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -42,7 +43,7 @@ function Navbar() {
       fetchUserData();
     }
   }, [token]);
-  console.log(userData);
+  // console.log(userData);
 
   const logout = () => {
     axios
@@ -67,7 +68,7 @@ function Navbar() {
     localStorage.removeItem("access");
     router.push("/login");
   };
-console.log(userData)
+  
   return (
     <nav className="flex flex-row justify-between">
       <div className="navbar bg-base-100">
@@ -87,6 +88,19 @@ console.log(userData)
             {userData ? (
               <li>
                 <Link href="/profile">{userData?.first_name}</Link>
+              </li>
+            ) : (
+              ""
+            )}
+            {userData ? (
+              <li className="rounded-full">
+                <Image
+                  className=""
+                  width={60}
+                  height={60}
+                  src={userData?.profile_picture}
+                  alt={userData?.first_name}
+                />
               </li>
             ) : (
               ""
