@@ -11,7 +11,7 @@ function UserUpdate() {
   const [countries, setCountries] = useState([]);
   const [selectedCountries, setSelectedCountries] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredCountries, setFilteredCountries] = useState([]);
+  const [filteredCountries, setFilteredCountries] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -19,7 +19,7 @@ function UserUpdate() {
     if (accessToken) {
       setToken(accessToken);
       fetchUserData(accessToken);
-      fetchCountries(); // Fetch countries when the component mounts
+      fetchCountries();
     }
   }, []);
 
@@ -28,7 +28,10 @@ function UserUpdate() {
       countries.filter(
         (country) =>
           country.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-          !selectedCountries.some((selected) => selected.code === country.code)
+          !selectedCountries.some(
+            (selected) => selected.code === country.code
+          ) &&
+          searchTerm.length > 2
       )
     );
   }, [searchTerm, countries, selectedCountries]);
@@ -45,14 +48,13 @@ function UserUpdate() {
       );
       const userData = response.data;
 
-      // Set form values with the fetched user data
       Object.keys(userData).forEach((key) => {
         if (key === "countries_visited" && userData[key]) {
           const selected = userData[key].map((code) => {
             const country = countries.find((country) => country.code === code);
             return { code, name: country ? country.name : code };
           });
-          setValue(key, userData[key]); // Assuming userData[key] is an array of country codes
+          setValue(key, userData[key]);
           setSelectedCountries(selected);
         } else {
           setValue(key, userData[key]);
@@ -70,7 +72,7 @@ function UserUpdate() {
     try {
       const response = await axios.get(
         "http://localhost:8000/api/user/countries/"
-      ); // Adjust the URL as needed
+      );
       setCountries(response.data);
     } catch (error) {
       console.error("Error fetching countries:", error);
@@ -82,7 +84,7 @@ function UserUpdate() {
       const updatedCountries = [...selectedCountries, country];
       setSelectedCountries(updatedCountries);
       const updatedCodes = updatedCountries.map((country) => country.code);
-      setValue("countries_visited", updatedCodes); // Update form value
+      setValue("countries_visited", updatedCodes);
     }
   };
 
@@ -96,7 +98,7 @@ function UserUpdate() {
     );
     setSelectedCountries(updatedCountries);
     const updatedCodes = updatedCountries.map((country) => country.code);
-    setValue("countries_visited", updatedCodes); // Update form value
+    setValue("countries_visited", updatedCodes);
   };
 
   const onSubmit = async (formData) => {
@@ -106,17 +108,13 @@ function UserUpdate() {
     }
 
     try {
-      const response = await axios.put(
-        "http://localhost:8000/api/user/update/",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.put("http://localhost:8000/api/user/update/", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-      router.push("/"); // Redirect as needed
+      router.push("/");
     } catch (error) {
       console.error(
         "Error updating user:",
@@ -126,28 +124,33 @@ function UserUpdate() {
   };
 
   return (
-    <div className="px-[300px]">
-      <h1 className="text-center text-[50px]">Update User Information</h1>
-      <form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
-        <label className="input input-bordered flex items-center gap-2 mb-[10px]">
-          <input {...register("username")} placeholder="Username" type="text" />
-        </label>
-        <label className="input input-bordered flex items-center gap-2 mb-[10px]">
+    <div className="max-w-4xl mx-auto p-8">
+      <h1 className="text-center text-4xl font-bold mb-8">
+        Update User Information
+      </h1>
+      <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+        <div className="flex flex-col space-y-4">
+          <input
+            {...register("username")}
+            placeholder="Username"
+            type="text"
+            className="input input-bordered w-full p-2 border border-gray-300 rounded"
+          />
           <input
             {...register("first_name")}
             placeholder="First Name"
             type="text"
+            className="input input-bordered w-full p-2 border border-gray-300 rounded"
           />
-        </label>
-        <label className="input input-bordered flex items-center gap-2 mb-[10px]">
           <input
             {...register("last_name")}
             placeholder="Last Name"
             type="text"
+            className="input input-bordered w-full p-2 border border-gray-300 rounded"
           />
-        </label>
-        <div className="flex flex-col gap-y-[100px]">
-          <div className="flex flex-row gap-2 mb-[10px] pb-[50px]">
+        </div>
+        <div className="space-y-4">
+          <div className="flex flex-wrap gap-2">
             {selectedCountries.map((country, index) => (
               <div
                 key={index}
@@ -164,28 +167,35 @@ function UserUpdate() {
               </div>
             ))}
           </div>
-          <label className="input input-bordered flex items-center gap-2 mb-[10px]">
+          <div className="relative">
             <input
               type="text"
               value={searchTerm}
               onChange={handleSearchChange}
               placeholder="Search countries"
-              className="input input-bordered"
+              className="input input-bordered w-full p-2 border border-gray-300 rounded"
             />
-            <ul className="list list-none overflow-y-auto max-h-40">
-              {filteredCountries.map((country) => (
-                <li
-                  key={country.code}
-                  onClick={() => handleCountrySelect(country)}
-                  className="cursor-pointer hover:bg-gray-200 p-2"
-                >
-                  {country.name}
-                </li>
-              ))}
-            </ul>
-          </label>
+            {searchTerm.length > 2 && (
+              <ul className="absolute z-10 bg-white border border-gray-300 rounded w-full mt-1 max-h-40 overflow-y-auto">
+                {filteredCountries?.map((country) => (
+                  <li
+                    key={country.code}
+                    onClick={() => handleCountrySelect(country)}
+                    className="cursor-pointer  p-2"
+                  >
+                    {country.name}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
-        <input type="submit" />
+        <button
+          type="submit"
+          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+        >
+          Submit
+        </button>
       </form>
     </div>
   );

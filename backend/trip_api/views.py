@@ -1,7 +1,6 @@
-from rest_framework import viewsets, filters, generics, permissions
-from rest_framework.response import Response
-from trip.models import Trip
-from .serializers import TripSerializer
+from rest_framework import filters, generics, permissions
+from trip.models import Trip, Category,Type,Accommodation
+from .serializers import TripSerializer, CategorySerializer,TypeSerializer,AccommodationSerializer
 from rest_framework.permissions import SAFE_METHODS, BasePermission
 from django.shortcuts import get_object_or_404
 
@@ -15,16 +14,16 @@ class PostUserWritePermission(BasePermission):
     
 
 class TripList(generics.ListAPIView):
-    # permission_classes = [IsAuthenticated]
     serializer_class = TripSerializer
     queryset = Trip.objects.all()
+
     
     
 class UserTripList(generics.ListAPIView):
     serializer_class = TripSerializer
     def get_queryset(self):
         username = self.kwargs['username']
-        return Trip.objects.filter(user__user_name=username)
+        return Trip.objects.filter(user__username=username)
     
 class TripDetail(generics.RetrieveAPIView):
     serializer_class = TripSerializer
@@ -48,3 +47,15 @@ class CreateTrip(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)  # Set the user to the logged-in user
+        
+class CategoryList(generics.ListCreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    
+class TypeList(generics.ListCreateAPIView):
+    queryset = Type.objects.all()
+    serializer_class = TypeSerializer
+    
+class AccommodationTypeList(generics.ListAPIView):
+    serializer_class = AccommodationSerializer
+    queryset = Accommodation.objects.all()

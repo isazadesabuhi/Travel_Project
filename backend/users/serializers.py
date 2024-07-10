@@ -8,7 +8,6 @@ class CountriesField(serializers.Field):
         if not value:
             return []
         return [str(code) for code in value]  # Assuming value is a list of country codes
-        # return [countries.name(code) for code in value]
 
     def to_internal_value(self, data):
         if not data:

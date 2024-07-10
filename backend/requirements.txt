@@ -6,3 +6,4 @@ django-autoslug
 pyjwt
 django-countries
 pillow
+django-filter

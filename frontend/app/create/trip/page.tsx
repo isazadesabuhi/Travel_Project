@@ -6,12 +6,50 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 
 function TripCreate() {
+  const [categories, setCategories] = useState([]);
+  const [accommodation_types, setAccommodation_types] = useState([]);
+  const [types, setTypes] = useState([]); // Add state for trip types
   const { register, handleSubmit } = useForm();
-  const [data, setData] = useState(null); // Change initial state to null
-  const [token, setToken] = useState(null); // State to store the token
+  const [data, setData] = useState(null);
+  const [token, setToken] = useState(null);
   const router = useRouter();
 
-  // useEffect to get the token once on component mount
+
+  // Fetch categories from API
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8000/api/category/trip`)
+      .then((response) => {
+        setCategories(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8000/api/type/trip`)
+      .then((response) => {
+        setTypes(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []); // Add useEffect to fetch trip types
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8000/api/type/accommodation`)
+      .then((response) => {
+        setAccommodation_types(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  // Get token from local storage
   useEffect(() => {
     const accessToken = localStorage.getItem("access");
     if (accessToken) {
@@ -50,7 +88,15 @@ function TripCreate() {
       placeholder: "Duration",
       type: "number",
     },
+    {
+      input: "accommodation_info",
+      placeholder:"Add more information about the accommodation such as the type of accommodation (hotel, hostel, apartment) and if your TripMates will have a private or shared room.",
+      type: "textarea",
+    },
   ];
+
+
+
 
   const onSubmit = async (formData) => {
     if (!token) {
@@ -58,34 +104,52 @@ function TripCreate() {
       return;
     }
 
-    try {
-      console.log("Access Token:", token); // Debug: Log the token
+    // Map selected categories to their full object representation
+    formData.categories = formData.categories?.map(
+      (name: any) => categories.find((category) => category.name === name).name
+    );
 
-      console.log("Token is valid. Proceeding with request...");
+    formData.accommodation_types = formData.accommodation_types?.map(
+      (name: any) => accommodation_types.find((accommodation_type) => accommodation_type.name === name).name
+    );
+
+    // Ensure trip_type is a dictionary
+    const selectedTripType = types.find(
+      (type) => type.name === formData.trip_type
+    );
+    formData.trip_type = selectedTripType;
+
+
+    try {
+      console.log("Form Data to be sent:", formData); // Debug: Log the form data
 
       const response = await axios.post(
-        "http://localhost:8000/api/create/trip/", // Ensure the URL matches your backend endpoint
+        "http://localhost:8000/api/create/trip/",
         formData,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+            Authorization: `Bearer ${token}`,
           },
         }
       );
 
       setData(response.data);
       console.log("Response Data:", response.data); // Debug: Log the response data
-
-      router.push("/"); // Redirect to login or another page as needed
+      router.push("/");
     } catch (error) {
       console.error(
         "Error creating trip:",
         error.response ? error.response.data : error.message
       ); // Debug: Log any errors
+
+      // Additional debugging information
+      if (error.response) {
+        console.log("Error Status:", error.response.status);
+        console.log("Error Headers:", error.response.headers);
+        console.log("Error Data:", error.response.data);
+      }
     }
   };
-
-  console.log("Form Data:", data); // Debug: Log the form data
 
   return (
     <div className="px-[300px]">
@@ -103,6 +167,52 @@ function TripCreate() {
             />
           </label>
         ))}
+        <section>
+          <h2 className="text-[20px] text-blue-300">Categories</h2>
+          <div className="grid grid-cols-3">
+            {categories.map((category) => (
+              <label key={category.id}>
+                <input
+                  {...register("categories")}
+                  type="checkbox"
+                  value={category.name}
+                />
+                {category.name}
+              </label>
+            ))}
+          </div>
+          
+        </section>
+        <section>
+        <h2 className="text-[20px] text-blue-300">Accommodation Types</h2>
+        <div className="grid grid-cols-3">
+            {accommodation_types.map((accommodation_type) => (
+              <label key={accommodation_type.id}>
+                <input
+                  {...register("accommodation_types")}
+                  type="checkbox"
+                  value={accommodation_type.name}
+                />
+                {accommodation_type.name}
+              </label>
+            ))}
+          </div>
+          </section>
+        <section>
+          <h2 className="text-[20px] text-blue-300">Trip Type</h2>
+          <div>
+            {types.map((type) => (
+              <label key={type.id}>
+                <input
+                  {...register("trip_type")}
+                  type="radio"
+                  value={type.name}
+                />
+                {type.name}
+              </label>
+            ))}
+          </div>
+        </section>
         <input type="submit" />
       </form>
     </div>

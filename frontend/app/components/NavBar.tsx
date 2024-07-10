@@ -82,9 +82,6 @@ function Navbar() {
             <li>
               <Link href="/trips">Trips</Link>
             </li>
-            <li>
-              <Link href="/search">Search Trips</Link>
-            </li>
             {userData ? (
               <li>
                 <Link href="/profile">{userData?.first_name}</Link>
@@ -98,8 +95,8 @@ function Navbar() {
                   className=""
                   width={60}
                   height={60}
-                  src={userData?.profile_picture}
-                  alt={userData?.first_name}
+                  src="https://images.unsplash.com/photo-1600486913747-55e5470d6f40?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                  alt="default photo"
                 />
               </li>
             ) : (

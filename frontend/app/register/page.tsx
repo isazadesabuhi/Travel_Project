@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 
-function TripCreate() {
+function UserRegistration() {
   const { register, handleSubmit } = useForm();
 
   const formObject = [
@@ -34,14 +34,8 @@ function TripCreate() {
       placeholder: "Password",
       type: "password",
     },
-    // {
-    //   input: "visited_countries",
-    //   placeholder: "visited_countries",
-    //   type: "text",
-    // },
   ];
 
-  const router = useRouter();
 
   return (
     <div className="px-[300px]">
@@ -71,6 +65,7 @@ function TripCreate() {
             </label>
           );
         })}
+        
 
         <input type="submit" />
       </form>
@@ -78,4 +73,4 @@ function TripCreate() {
   );
 }
 
-export default TripCreate;
+export default UserRegistration;

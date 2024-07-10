@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import axios from "axios";
+// import sab from "public"
 
 function Profile() {
   const [userData, setUserData] = useState(null);
@@ -41,39 +41,76 @@ function Profile() {
     }
   }, [token]);
   return (
-    <main>
-      <div className="container mx-auto py-8">
-        <h1 className="text-2xl text-center font-bold mb-4">
-          {userData?.first_name}'s profile
+    <main className="bg-gray-50 min-h-screen py-8">
+      <div className="container mx-auto px-4">
+        <h1 className="text-4xl text-center font-extrabold text-gray-800 mb-8">
+          {userData?.first_name}'s Profile
         </h1>
-        <div className="flex flex-col">
-          <Link className="text-red-400" href="/update/profile">
-            update profile
+        <div className="flex flex-col items-center mb-8">
+          <Link
+            className="text-blue-500 hover:text-blue-700 mb-2"
+            href="/update/profile"
+          >
+            Update Profile
           </Link>
-          <Link className="text-red-400" href="/update/user_password">
-            update password
+          <Link
+            className="text-blue-500 hover:text-blue-700"
+            href="/update/user_password"
+          >
+            Update Password
+          </Link>
+          <Link
+            className="text-green-500 hover:text-green-700"
+            href="/create/trip"
+          >
+            Create a Trip
           </Link>
         </div>
-        <Image
-          className=""
-          width={100}
-          height={100}
-          src={userData?.profile_picture}
-          alt={userData?.first_name}
-        />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div className="flex flex-col">
-            <div>name:{userData?.first_name}</div>
-            <div>last name:{userData?.last_name}</div>
-            <div>email: {userData?.email}</div>
-            <div>id: {userData?.id}</div>
-            {/* <div>countries {userData?.countries_visited}</div> */}
-            countries that i have visited:
-            {userData?.countries_visited.map((country, index) => (
-              <div key={index} className="flex flex-col">
-                {index + 1}:{country}
-              </div>
-            ))}
+        <div className="flex justify-center mb-8">
+          <Image
+            className="rounded-full border-4 border-gray-300"
+            width={150}
+            height={150}
+            src="https://images.unsplash.com/photo-1600486913747-55e5470d6f40?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            alt="default photo"
+          />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-2xl font-semibold mb-4">
+              Personal Information
+            </h2>
+            <p className="mb-2">
+              <span className="font-bold text-black">Name:</span>{" "}
+              {userData?.first_name}
+            </p>
+            <p className="mb-2">
+              <span className="font-bold text-black">Last Name:</span>{" "}
+              {userData?.last_name}
+            </p>
+            <p className="mb-2">
+              <span className="font-bold text-black">Email:</span>{" "}
+              {userData?.email}
+            </p>
+            <p className="mb-2">
+              <span className="font-bold text-black">ID:</span> {userData?.id}
+            </p>
+            <h3 className="mt-4 mb-2 font-semibold text-black">
+              Countries Visited:
+            </h3>
+            <div className="pl-4">
+              {userData?.countries_visited.map((country, index) => (
+                <p key={index} className="mb-1">
+                  {index + 1}. {country}
+                </p>
+              ))}
+            </div>
+            <Link
+              className="text-blue-500 hover:text-blue-700 mt-4 inline-block"
+              href={"mytrips/" + userData?.username}
+            >
+              My Trips
+            </Link>
           </div>
         </div>
       </div>
