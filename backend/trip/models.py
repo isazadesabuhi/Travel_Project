@@ -1,5 +1,4 @@
 from django.db import models
-import json
 from django.core.validators import MinValueValidator
 from django.conf import settings
 from autoslug import AutoSlugField
